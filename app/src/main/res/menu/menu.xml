@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/disponibleswitch"
+        android:title="@string/switchname"
+        app:actionLayout="@layout/switch_item"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/usuariosDisponniblesbtn"
+        android:actionLayout="@layout/menu_layout"
+        android:icon="@drawable/baseline_person_24"
+        android:title="@string/usuarios"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/logOutBtn"
+        android:enabled="true"
+        android:icon="@drawable/baseline_logout_24"
+        android:title="@string/logout" />
+</menu>

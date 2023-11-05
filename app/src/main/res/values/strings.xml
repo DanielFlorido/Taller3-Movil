@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Taller3</string>
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="devolver_button_text">Regresar</string>
+    <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="Registar"> Registrate</string>
+    <string name="registrarme">Registrarme</string>
+    <string name="login_text">Log In</string>
+    <string name="Uuario">Usuario</string>
+    <string name="Contraseña">Contraseña</string>
+    <string name="email">Email</string>
+    <string name="registrar_un_evento">Registrar un evento</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="correo">correo</string>
+    <string name="password">password</string>
+    <string name="logout">logOut</string>
+    <string name="usuarios">usuarios</string>
+    <string name="switchname">switch</string>
+    <string name="numero_identificacion">numero identificacion</string>
+</resources>

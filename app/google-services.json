@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "261179009973",
+    "project_id": "taller-3-6cd33",
+    "storage_bucket": "taller-3-6cd33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261179009973:android:855cb6ff27812ac6f6c7fc",
+        "android_client_info": {
+          "package_name": "com.javeriana.taller3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8oaHOwdxMHxLHFyB3sbHD3hTeLvxZR3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
