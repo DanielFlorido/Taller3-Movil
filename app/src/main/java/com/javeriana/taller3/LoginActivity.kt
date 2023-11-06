@@ -6,12 +6,17 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseUser
+import com.javeriana.taller3.controller.MundoController
+import com.javeriana.taller3.controller.MundoController.Companion.autenticationService
+import com.javeriana.taller3.controller.MundoController.Companion.databaseRealtimeService
+import com.javeriana.taller3.controller.MundoController.Companion.usuario
 import com.javeriana.taller3.databinding.ActivityLoginBinding
+import com.javeriana.taller3.model.Usuario
 import com.javeriana.taller3.services.AutenticationService
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var autenticationService: AutenticationService
+    private var mundoController: MundoController= MundoController.getInstancia()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityLoginBinding.inflate(layoutInflater)
@@ -54,6 +59,14 @@ class LoginActivity : AppCompatActivity() {
     }
     private fun updateUI(currentUser: FirebaseUser?){
         if(currentUser!=null){
+            databaseRealtimeService.getUser(currentUser) {
+                if (it.isSuccessful) {
+                    val user = it.result.getValue(Usuario::class.java)
+                    if (user != null) {
+                        usuario=user
+                    }
+                }
+            }
             val intent=Intent(this, MapActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)

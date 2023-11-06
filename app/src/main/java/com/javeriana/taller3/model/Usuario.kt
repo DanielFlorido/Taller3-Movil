@@ -12,4 +12,8 @@ class Usuario(
         apellido: String,
         numeroId: String
     ) : this(email, password, nombre, apellido, numeroId, 0, 0, "")
+
+    override fun toString(): String {
+        return nombre ?: "no data"
+    }
 }

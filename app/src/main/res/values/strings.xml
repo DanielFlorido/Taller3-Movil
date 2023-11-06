@@ -21,4 +21,5 @@
     <string name="usuarios">usuarios</string>
     <string name="switchname">switch</string>
     <string name="numero_identificacion">numero identificacion</string>
+    <string name="seguir">Seguir</string>
 </resources>
