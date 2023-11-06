@@ -14,7 +14,16 @@ import android.view.MenuItem
 import android.widget.CompoundButton
 import android.widget.Switch
 import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.javeriana.taller3.controller.MundoController
@@ -45,7 +54,8 @@ class MapActivity : AppCompatActivity() {
 
     private val bogota = GeoPoint(4.62, -74.07)
 
-    private val locationSettings= registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()
+    private val locationSettings= registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
     ) {
         if (it.resultCode == RESULT_OK) {
             locationService.startLocationUpdates()
