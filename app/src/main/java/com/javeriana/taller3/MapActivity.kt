@@ -51,7 +51,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var map : MapView
     private lateinit var locationService: LocationService
     private lateinit var mapRenderingService: MapRenderingService
-
+    private var disponible=false
     private val bogota = GeoPoint(4.62, -74.07)
 
     private val locationSettings= registerForActivityResult(
@@ -151,6 +151,12 @@ class MapActivity : AppCompatActivity() {
         } else {
             mapRenderingService.currentLocation.geoPoint= GeoPoint(location.latitude,location.longitude)
             mapRenderingService.addMarker(mapRenderingService.currentLocation.geoPoint, typeMarker = 'A')
+            if(disponible){
+                usuario.latitud=mapRenderingService.currentLocation.geoPoint.latitude
+                Log.i("Daniel",usuario.latitud.toString()+" "+ mapRenderingService.currentLocation.geoPoint.latitude.toString())
+                usuario.longitud=mapRenderingService.currentLocation.geoPoint.longitude
+                Log.i("Daniel",usuario.longitud.toString()+" "+ mapRenderingService.currentLocation.geoPoint.longitude.toString())
+            }
         }
     }
      private fun readEvents(context: Context){
@@ -190,9 +196,15 @@ class MapActivity : AppCompatActivity() {
         sw.setOnCheckedChangeListener { _, p1 ->
             if (p1) {
                 Toast.makeText(baseContext, "Ahora estas disponible!", Toast.LENGTH_SHORT).show()
+                disponible=true
+                usuario.latitud=mapRenderingService.currentLocation.geoPoint.latitude
+                usuario.longitud=mapRenderingService.currentLocation.geoPoint.longitude
                 databaseRealtimeService.saveDisponible(usuario, autenticationService.auth.currentUser)
             }else{
                 Toast.makeText(baseContext,"Ya no estas disponible",Toast.LENGTH_SHORT).show()
+                disponible=false
+                usuario.latitud=0.0
+                usuario.longitud=0.0
                 databaseRealtimeService.deleteDisponible(autenticationService.auth.currentUser)
             }
         }
