@@ -69,8 +69,6 @@ class MapActivity : AppCompatActivity() {
     private lateinit var map : MapView
     private lateinit var locationService: LocationService
     private lateinit var mapRenderingService: MapRenderingService
-
-    private lateinit var notificationService : NotificationService
     private var disponible=false
     private val bogota = GeoPoint(4.62, -74.07)
 
@@ -93,8 +91,6 @@ class MapActivity : AppCompatActivity() {
         binding= ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
         requestPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-
-       // databaseRealtimeService.listenForAvailabilityChanges(availabilityListener)
 
         Configuration.getInstance().load(this, androidx.preference.PreferenceManager.getDefaultSharedPreferences(this))
         locationService = LocationService(this, this)
