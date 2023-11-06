@@ -44,6 +44,9 @@ class DatabaseRealtimeService {
                         }
                     }
                 }
+                for(us in listUsers){
+                    Log.i("Daniel", us.toString())
+                }
                 f()
             }
             override fun onCancelled(error: DatabaseError) {

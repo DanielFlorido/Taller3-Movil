@@ -32,7 +32,7 @@ class DisponiblesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        databaseRealtimeService.endSubscription()
+        databaseRealtimeService.readDisponibles { updateUI() }
     }
     fun updateUI(){
         val cursor=databaseRealtimeService.cursor()
