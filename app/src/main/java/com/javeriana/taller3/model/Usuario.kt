@@ -12,5 +12,5 @@ class Usuario(
         apellido: String,
         numeroId: String,
         urlImage: String
-    ) : this(email, password, nombre, apellido, numeroId, 0, 0, urlImage)
+    ) : this(email, password, nombre, apellido, numeroId, 0.0, 0.0, urlImage)
 }

@@ -9,20 +9,16 @@ import android.util.Log
 import android.widget.Toast
 import com.javeriana.taller3.controller.MundoController
 import com.javeriana.taller3.controller.MundoController.Companion.autenticationService
+import com.javeriana.taller3.controller.MundoController.Companion.cloudStorageService
 import com.javeriana.taller3.controller.MundoController.Companion.databaseRealtimeService
 import com.javeriana.taller3.controller.MundoController.Companion.getInstancia
 import com.javeriana.taller3.controller.MundoController.Companion.usuario
 import com.javeriana.taller3.databinding.ActivityRegisterBinding
 import com.javeriana.taller3.model.Usuario
-import com.javeriana.taller3.services.AutenticationService
 import com.javeriana.taller3.services.CloudStorageService
-import com.javeriana.taller3.services.DatabaseRealtimeService
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
-    private lateinit var autenticationService: AutenticationService
-    private lateinit var databaseRealtimeService: DatabaseRealtimeService
-    private lateinit var cloudStorageService: CloudStorageService
     private var imagenSubida = false
     private lateinit var imageUri : Uri
     private lateinit var imageName: String
