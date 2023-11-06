@@ -74,4 +74,8 @@ class DatabaseRealtimeService {
     fun getUser(key:String, co:OnCompleteListener<DataSnapshot>):Task<DataSnapshot>{
         return database.getReference(DISPONIBLES).child(key).get().addOnCompleteListener(co)
     }
+    private val usersRef = database.getReference("users")
+    fun listenForAvailabilityChanges(listener: ValueEventListener) {
+        usersRef.addValueEventListener(listener)
+    }
 }
