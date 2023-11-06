@@ -10,10 +10,7 @@ class Usuario(
         password: String,
         nombre: String,
         apellido: String,
-        numeroId: String
-    ) : this(email, password, nombre, apellido, numeroId, 0.0, 0.0, "")
-
-    override fun toString(): String {
-        return nombre ?: "no data"
-    }
+        numeroId: String,
+        urlImage: String
+    ) : this(email, password, nombre, apellido, numeroId, 0, 0, urlImage)
 }
