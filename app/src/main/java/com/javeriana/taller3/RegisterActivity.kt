@@ -66,9 +66,11 @@ class RegisterActivity : AppCompatActivity() {
                                     binding.nombretxt.text.toString(),
                                     binding.apellidotxt.text.toString(),
                                     binding.numeroID.text.toString(),
-                                    imageUrl.toString()
+                                    imageUrl.toString(),
+                                    autenticationService.auth.uid!!
                                 )
                                 databaseRealtimeService.saveUser(user,autenticationService.auth.currentUser)
+                                usuario=user
                                 val intent= Intent(this, MapActivity::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intent)
