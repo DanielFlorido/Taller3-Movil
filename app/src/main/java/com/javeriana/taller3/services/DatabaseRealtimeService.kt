@@ -44,9 +44,6 @@ class DatabaseRealtimeService {
                         }
                     }
                 }
-                for(us in listUsers){
-                    Log.i("Daniel", us.toString())
-                }
                 f()
             }
             override fun onCancelled(error: DatabaseError) {
@@ -60,16 +57,21 @@ class DatabaseRealtimeService {
         database.getReference(DISPONIBLES).removeEventListener(data)
     }
     fun cursor():Cursor{
-        val cursor2= MatrixCursor(arrayOf("_id", "nombre"), listUsers.size)
+        val cursor2= MatrixCursor(arrayOf("_id", "nombre","urlFile", "key"), listUsers.size)
         var i=1
         for (user in listUsers){
             cursor2.newRow().add("_id",i)
                 .add("nombre",user.nombre)
+                .add("urlFile", user.urlImage)
+                .add("key", user.key)
             i++
         }
         return cursor2
     }
     fun getUser(currentUser: FirebaseUser?, co: OnCompleteListener<DataSnapshot>):Task<DataSnapshot>{
         return database.getReference(USERS).child(currentUser!!.uid).get().addOnCompleteListener(co)
+    }
+    fun getUser(key:String, co:OnCompleteListener<DataSnapshot>):Task<DataSnapshot>{
+        return database.getReference(DISPONIBLES).child(key).get().addOnCompleteListener(co)
     }
 }

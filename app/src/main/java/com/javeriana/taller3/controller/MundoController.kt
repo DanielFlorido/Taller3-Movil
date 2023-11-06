@@ -15,6 +15,7 @@ class MundoController private constructor(){
         var cloudStorageService:CloudStorageService= CloudStorageService()
         var autenticationService:AutenticationService= AutenticationService()
         var usuario: Usuario=Usuario()
+        var usuarioSeguido: Usuario= Usuario()
         fun getInstancia():MundoController{
             if(instacia==null){
                 synchronized(this){

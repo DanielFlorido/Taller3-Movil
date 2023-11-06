@@ -4,13 +4,15 @@ class Usuario(
     val email: String? = null, val password: String? = null,
     val nombre: String? = null, val apellido: String? = null,
     val numeroId: String? = null, var latitud: Double? = null, var longitud: Double? = null,
-    var urlImage: String? = null) {
+    var urlImage: String? = null, val key: String?=null) {
     constructor(
         email: String,
         password: String,
         nombre: String,
         apellido: String,
         numeroId: String,
-        urlImage: String
-    ) : this(email, password, nombre, apellido, numeroId, 0.0, 0.0, urlImage)
+        urlImage: String,
+        key: String
+    ) : this(email, password, nombre, apellido, numeroId, 0.0, 0.0, urlImage,key)
+
 }
