@@ -136,7 +136,6 @@ class MapActivity : AppCompatActivity() {
         super.onPause()
         map.onPause()
         locationService.stopLocationUpdates()
-        databaseRealtimeService.deleteDisponible(autenticationService.auth.currentUser)
     }
 
     fun onLocationUpdate(location: Location) {
