@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.javeriana.taller3.MapActivity
 import com.javeriana.taller3.R
 import com.javeriana.taller3.controller.MundoController.Companion.databaseRealtimeService
@@ -26,7 +27,6 @@ class DisponiblesAdapter (context: Context?, c:Cursor?, flags: Int): CursorAdapt
     }
 
     override fun bindView(view: View?, context: Context?, cursor: Cursor?) {
-        /*
         val tvId= view!!.findViewById<TextView>(R.id.numDisponibletxt)
         val tvnombre= view.findViewById<TextView>(R.id.nombre_profile_txt)
         val id= cursor!!.getInt(0)
@@ -48,13 +48,9 @@ class DisponiblesAdapter (context: Context?, c:Cursor?, flags: Int): CursorAdapt
                     val user= it.result.getValue(Usuario::class.java)
                     if(user!=null){
                         usuarioSeguido=user
-                        val i= Intent(context,MapFollowActivity::class.java)
-                        context!!.startActivity(i)
                     }
                 }
             }
         }
-
-         */
     }
 }

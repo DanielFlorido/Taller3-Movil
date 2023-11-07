@@ -4,6 +4,7 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.CursorAdapter
 import com.javeriana.taller3.adapters.DisponiblesAdapter
 import com.javeriana.taller3.controller.MundoController
@@ -21,13 +22,12 @@ class DisponiblesActivity : AppCompatActivity() {
         binding= ActivityDisponiblesBinding.inflate(layoutInflater)
         adapter= DisponiblesAdapter(this,null,0)
         binding.listaDisponibles.adapter=adapter
-        databaseRealtimeService.readDisponibles { updateUI() }
         setContentView(binding.root)
-        updateUI()
+        databaseRealtimeService.readDisponibles { updateUI() }
     }
     override fun onPause() {
-        databaseRealtimeService.endSubscription()
         super.onPause()
+        databaseRealtimeService.endSubscription()
     }
 
     override fun onResume() {

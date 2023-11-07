@@ -24,7 +24,7 @@ class NotificationService : Service() {
         super.onCreate()
         Log.i("NATA", "se esta escuchando notificacion")
         createNotificationChannel()
-        databaseRealtimeService.readDisponibles {
+        databaseRealtimeService.notificationDispoible {
             var notification = buildNotification("Persona disponible", "Nueva persona disponible", R.drawable.baseline_circle_notifications_24, MapActivity::class.java)
             notify(notification)
             Log.i("NATA", "se envio la notificacion")
@@ -32,7 +32,7 @@ class NotificationService : Service() {
     }
     fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "channel";
+            val name = "channel"
             val description = "channel description"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel("Test", name, importance)
@@ -58,9 +58,16 @@ class NotificationService : Service() {
 
     fun notify(notification: Notification) {
         notid++
+
         val notificationManager = NotificationManagerCompat.from(this)
+
         if(checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
             notificationManager.notify(notid, notification)
+        }
+        if(notificationManager.areNotificationsEnabled()){
+            notificationManager.notify(notid, notification)
+        }else{
+            Log.i("Daniel", "no tenemos permiso!")
         }
     }
 

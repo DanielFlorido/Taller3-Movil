@@ -84,13 +84,16 @@ class MapActivity : AppCompatActivity() {
     private var mundoController:MundoController= MundoController.getInstancia()
 
     val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission(), ActivityResultCallback {
+
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        requestPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
 
         Configuration.getInstance().load(this, androidx.preference.PreferenceManager.getDefaultSharedPreferences(this))
         locationService = LocationService(this, this)
@@ -178,9 +181,7 @@ class MapActivity : AppCompatActivity() {
             mapRenderingService.addMarker(mapRenderingService.currentLocation.geoPoint, typeMarker = 'A')
             if(disponible){
                 usuario.latitud=mapRenderingService.currentLocation.geoPoint.latitude
-                Log.i("Daniel",usuario.latitud.toString()+" "+ mapRenderingService.currentLocation.geoPoint.latitude.toString())
                 usuario.longitud=mapRenderingService.currentLocation.geoPoint.longitude
-                Log.i("Daniel",usuario.longitud.toString()+" "+ mapRenderingService.currentLocation.geoPoint.longitude.toString())
             }
         }
     }
