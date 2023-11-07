@@ -14,7 +14,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.javeriana.taller3.MapActivity
 
-class LocationService(private val context: Context, private val locationUpdateListener: MapActivity) {
+class LocationService(private val context: Context, private val locationUpdateListener: LocationUpdateListener) {
     var locationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     var locationRequest: LocationRequest
     private var locationCallback: LocationCallback
@@ -45,5 +45,8 @@ class LocationService(private val context: Context, private val locationUpdateLi
     }
     fun stopLocationUpdates(){
         locationClient.removeLocationUpdates(locationCallback)
+    }
+    interface LocationUpdateListener {
+        fun onLocationUpdate(location: Location)
     }
 }

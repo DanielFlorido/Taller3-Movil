@@ -52,7 +52,7 @@ class MapRenderingService (private val context: Context, private val map : MapVi
                 markers.add(marker)
             }
             'O' ->{
-                marker.title="Ubicacion Otro Usuario"
+                marker.title= title
                 val icon= ResourcesCompat.getDrawable(context.resources, R.drawable.baseline_location_on_cyan, context.theme)
                 marker.icon=icon
                 markers.add(marker)

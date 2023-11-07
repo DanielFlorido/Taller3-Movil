@@ -1,9 +1,11 @@
 package com.javeriana.taller3
 
+import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.CursorAdapter
 import com.javeriana.taller3.adapters.DisponiblesAdapter
 import com.javeriana.taller3.controller.MundoController
@@ -11,7 +13,7 @@ import com.javeriana.taller3.controller.MundoController.Companion.databaseRealti
 import com.javeriana.taller3.databinding.ActivityDisponiblesBinding
 import com.javeriana.taller3.services.DatabaseRealtimeService
 
-class DisponiblesActivity : AppCompatActivity() {
+class DisponiblesActivity : AppCompatActivity(){
     private lateinit var binding: ActivityDisponiblesBinding
     private var projection= arrayOf(String, String)
     private lateinit var adapter: DisponiblesAdapter
@@ -25,6 +27,7 @@ class DisponiblesActivity : AppCompatActivity() {
         setContentView(binding.root)
         updateUI()
     }
+
     override fun onPause() {
         databaseRealtimeService.endSubscription()
         super.onPause()
@@ -38,4 +41,5 @@ class DisponiblesActivity : AppCompatActivity() {
         val cursor=databaseRealtimeService.cursor()
         adapter.changeCursor(cursor)
     }
+
 }

@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.javeriana.taller3.NotificationMapActivity
 import com.javeriana.taller3.R
 import com.javeriana.taller3.controller.MundoController.Companion.databaseRealtimeService
 import com.javeriana.taller3.controller.MundoController.Companion.usuarioSeguido
@@ -46,10 +47,23 @@ class DisponiblesAdapter (context: Context?, c:Cursor?, flags: Int): CursorAdapt
                     val user= it.result.getValue(Usuario::class.java)
                     if(user!=null){
                        usuarioSeguido=user
+                        val latitud = user.latitud
+                        val longitud = user.longitud
+                        val nombre = user.nombre
+                        Log.i("BojtaPur", "Latitud: $latitud, Longitud: $longitud, Nombre: $nombre")
+                        if(latitud != null && longitud != null && nombre != null){
+                            Log.i("BojtaPurNi", "Latitud: $latitud, Longitud: $longitud, Nombre: $nombre")
+                            val intent = Intent(context, NotificationMapActivity::class.java)
+                            intent.putExtra("Latitud", latitud)
+                            intent.putExtra("Longitud", longitud)
+                            intent.putExtra("Nombre", nombre)
+                            context?.startActivity(intent)
+                        }
                         Toast.makeText(context, "Estas siguiendo a ${usuarioSeguido.nombre}", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
     }
+
 }
