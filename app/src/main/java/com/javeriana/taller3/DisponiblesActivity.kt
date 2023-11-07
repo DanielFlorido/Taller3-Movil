@@ -41,9 +41,4 @@ class DisponiblesActivity : AppCompatActivity(){
         val cursor=databaseRealtimeService.cursor()
         adapter.changeCursor(cursor)
     }
-
-    override fun onDestroy() {
-        databaseRealtimeService.deleteDisponible(autenticationService.auth.currentUser)
-        super.onDestroy()
-    }
 }

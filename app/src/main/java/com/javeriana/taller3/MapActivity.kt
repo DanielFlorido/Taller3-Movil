@@ -256,9 +256,4 @@ class MapActivity : AppCompatActivity(), LocationService.LocationUpdateListener 
         }
         return super.onOptionsItemSelected(item)
     }
-
-    override fun onDestroy() {
-        databaseRealtimeService.deleteDisponible(autenticationService.auth.currentUser)
-        super.onDestroy()
-    }
 }
