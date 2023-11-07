@@ -1,11 +1,16 @@
 package com.javeriana.taller3
 
 import android.Manifest
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
@@ -15,10 +20,13 @@ import android.view.MenuItem
 import android.widget.CompoundButton
 import android.widget.Switch
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -30,6 +38,9 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.javeriana.taller3.controller.MundoController
 import com.javeriana.taller3.controller.MundoController.Companion.autenticationService
@@ -38,8 +49,10 @@ import com.javeriana.taller3.controller.MundoController.Companion.usuario
 import com.javeriana.taller3.databinding.ActivityMapBinding
 import com.javeriana.taller3.services.DatabaseRealtimeService
 import com.javeriana.taller3.model.MyLocation
+import com.javeriana.taller3.services.CloudStorageService
 import com.javeriana.taller3.services.LocationService
 import com.javeriana.taller3.services.MapRenderingService
+import com.javeriana.taller3.services.NotificationService
 import org.json.JSONException
 import org.json.JSONObject
 import org.osmdroid.config.Configuration
@@ -69,10 +82,18 @@ class MapActivity : AppCompatActivity(), LocationService.LocationUpdateListener 
         }
     }
     private var mundoController:MundoController= MundoController.getInstancia()
+
+    val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission(), ActivityResultCallback {
+
+    })
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
 
         Configuration.getInstance().load(this, androidx.preference.PreferenceManager.getDefaultSharedPreferences(this))
         locationService = LocationService(this, this)
@@ -102,7 +123,6 @@ class MapActivity : AppCompatActivity(), LocationService.LocationUpdateListener 
                 map.controller.animateTo(bogota)
             }
         }
-
         readEvents(this)
     }
 
@@ -160,9 +180,7 @@ class MapActivity : AppCompatActivity(), LocationService.LocationUpdateListener 
             mapRenderingService.addMarker(mapRenderingService.currentLocation.geoPoint, typeMarker = 'A')
             if(disponible){
                 usuario.latitud=mapRenderingService.currentLocation.geoPoint.latitude
-                Log.i("Daniel",usuario.latitud.toString()+" "+ mapRenderingService.currentLocation.geoPoint.latitude.toString())
                 usuario.longitud=mapRenderingService.currentLocation.geoPoint.longitude
-                Log.i("Daniel",usuario.longitud.toString()+" "+ mapRenderingService.currentLocation.geoPoint.longitude.toString())
             }
         }
     }
@@ -207,6 +225,7 @@ class MapActivity : AppCompatActivity(), LocationService.LocationUpdateListener 
                 usuario.latitud=mapRenderingService.currentLocation.geoPoint.latitude
                 usuario.longitud=mapRenderingService.currentLocation.geoPoint.longitude
                 databaseRealtimeService.saveDisponible(usuario, autenticationService.auth.currentUser)
+              //  notificationService.notify("Nueva persona disponible", "Alguien esta disponible")
             }else{
                 Toast.makeText(baseContext,"Ya no estas disponible",Toast.LENGTH_SHORT).show()
                 disponible=false
@@ -217,6 +236,8 @@ class MapActivity : AppCompatActivity(), LocationService.LocationUpdateListener 
         }
         return true
     }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
@@ -232,4 +253,5 @@ class MapActivity : AppCompatActivity(), LocationService.LocationUpdateListener 
         }
         return super.onOptionsItemSelected(item)
     }
+
 }

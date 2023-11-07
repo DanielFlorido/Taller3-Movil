@@ -23,14 +23,13 @@ class DisponiblesActivity : AppCompatActivity(){
         binding= ActivityDisponiblesBinding.inflate(layoutInflater)
         adapter= DisponiblesAdapter(this,null,0)
         binding.listaDisponibles.adapter=adapter
-        databaseRealtimeService.readDisponibles { updateUI() }
         setContentView(binding.root)
-        updateUI()
+        databaseRealtimeService.readDisponibles { updateUI() }
     }
 
     override fun onPause() {
-        databaseRealtimeService.endSubscription()
         super.onPause()
+        databaseRealtimeService.endSubscription()
     }
 
     override fun onResume() {

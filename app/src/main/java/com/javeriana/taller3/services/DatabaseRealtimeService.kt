@@ -6,6 +6,7 @@ import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -19,7 +20,8 @@ class DatabaseRealtimeService {
     private val USERS="users/"
     private val DISPONIBLES= "disponibles/"
     var listUsers: MutableList<Usuario> = mutableListOf()
-    private lateinit var data: ValueEventListener
+    private var notificationsListener: ChildEventListener? = null
+    private lateinit var listListener: ValueEventListener
     fun saveUser(usuario:Usuario, currentUser: FirebaseUser?){
         myRef=database.getReference(USERS+currentUser!!.uid)
         myRef.setValue(usuario)
@@ -32,8 +34,39 @@ class DatabaseRealtimeService {
         myRef=database.getReference(DISPONIBLES+currentUser!!.uid)
         myRef.removeValue()
     }
+    fun notificationDispoible(f:()-> Unit){
+        Log.i("Daniel", toString())
+        if (notificationsListener==null){
+            notificationsListener= object:ChildEventListener{
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    f()
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    //hacerlo :D
+                }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    val user= snapshot.getValue(Usuario::class.java)
+                    Log.i("Daniel", "info notification: ${user.toString()}")
+                }
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    //hacerlo :D
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    //hacerlo :D
+                }
+
+            }
+        }
+        Log.i("Daniel", "info data: ${notificationsListener.toString()}")
+        myRef=database.getReference(DISPONIBLES)
+        notificationsListener?.let { myRef.addChildEventListener(it) }
+    }
     fun readDisponibles(f:()-> Unit){
-        data =object :ValueEventListener{
+        listListener =object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 listUsers.clear()
                 if (listUsers.isEmpty()){
@@ -51,10 +84,11 @@ class DatabaseRealtimeService {
             }
         }
         myRef=database.getReference(DISPONIBLES)
-        myRef.addValueEventListener(data)
+        myRef.addValueEventListener(listListener)
     }
     fun endSubscription(){
-        database.getReference(DISPONIBLES).removeEventListener(data)
+        Log.i("Daniel", "Terminando subscripcion")
+        database.getReference(DISPONIBLES).removeEventListener(listListener)
     }
     fun cursor():Cursor{
         val cursor2= MatrixCursor(arrayOf("_id", "nombre","urlFile", "key"), listUsers.size)

@@ -13,6 +13,7 @@ import com.javeriana.taller3.controller.MundoController.Companion.usuario
 import com.javeriana.taller3.databinding.ActivityLoginBinding
 import com.javeriana.taller3.model.Usuario
 import com.javeriana.taller3.services.AutenticationService
+import com.javeriana.taller3.services.NotificationService
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -20,6 +21,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityLoginBinding.inflate(layoutInflater)
+        val intent = Intent(this, NotificationService::class.java)
+        startService(intent)
         autenticationService= AutenticationService()
         setContentView(binding.root)
         binding.LogInButton.setOnClickListener {
