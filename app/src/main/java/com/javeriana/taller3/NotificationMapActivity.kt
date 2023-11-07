@@ -98,11 +98,12 @@ class NotificationMapActivity : AppCompatActivity(), LocationService.LocationUpd
         if(extras != null){
             val key= extras.getString("key")
             if (key != null) {
-                databaseRealtimeService.getUser(key){
+                databaseRealtimeService.getUser(key){ it ->
                     if(it.isSuccessful){
                         var user=it.result.getValue(Usuario::class.java)
                         if(user!=null){
                             user.nombre?.let { Log.i("Daniel", it) }
+                            updatePerson(user)
                             databaseRealtimeService.seguirDisponible({ updatePerson(user) },key)
                         }
                     }
