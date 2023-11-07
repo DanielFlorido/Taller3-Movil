@@ -1,6 +1,7 @@
 package com.javeriana.taller3
 
 import android.Manifest
+import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
@@ -18,9 +19,12 @@ import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import com.javeriana.taller3.controller.MundoController
+import com.javeriana.taller3.controller.MundoController.Companion.autenticationService
+import com.javeriana.taller3.controller.MundoController.Companion.databaseRealtimeService
 import com.javeriana.taller3.databinding.ActivityMapBinding
 import com.javeriana.taller3.databinding.ActivityNotificationMapBinding
 import com.javeriana.taller3.model.MyLocation
+import com.javeriana.taller3.model.Usuario
 import com.javeriana.taller3.services.LocationService
 import com.javeriana.taller3.services.MapRenderingService
 import org.osmdroid.config.Configuration
@@ -54,7 +58,12 @@ class NotificationMapActivity : AppCompatActivity(), LocationService.LocationUpd
         super.onCreate(savedInstanceState)
         binding= ActivityNotificationMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        if(autenticationService.auth.currentUser==null){
+            val intent= Intent(this,LoginActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
+        }
         Configuration.getInstance().load(this, androidx.preference.PreferenceManager.getDefaultSharedPreferences(this))
         locationService = LocationService(this, this)
         map = binding.osmNotificationMap
@@ -83,21 +92,31 @@ class NotificationMapActivity : AppCompatActivity(), LocationService.LocationUpd
                 map.controller.animateTo(bogota)
             }
         }
-
         val intent = intent
         val extras = intent.extras
 
         if(extras != null){
-            Log.i("Patnur Evitchium", "WHERE DO WE GO NOW")
-            val latitud = extras.getDouble("Latitud")
-            val longitud = extras.getDouble("Longitud")
-            val nombre = extras.getString("Nombre")
-            var point = GeoPoint(latitud, longitud)
-            mapRenderingService.addMarker(point, nombre, typeMarker = 'O')
-            calcularDistancia(latitud, longitud)
+            val key= extras.getString("key")
+            if (key != null) {
+                databaseRealtimeService.getUser(key){
+                    if(it.isSuccessful){
+                        var user=it.result.getValue(Usuario::class.java)
+                        if(user!=null){
+                            user.nombre?.let { Log.i("Daniel", it) }
+                            databaseRealtimeService.seguirDisponible({ updatePerson(user) },key)
+                        }
+                    }
+                }
+            }
         }
-    }
 
+    }
+    fun updatePerson(user : Usuario){
+        user.nombre?.let { Log.i("Daniel", it) }
+        var point = GeoPoint(user.latitud!!, user.longitud!!)
+        mapRenderingService.addMarker(point, user.nombre, typeMarker = 'O')
+        calcularDistancia(user.latitud!!, user.longitud!!)
+    }
     override fun onResume() {
         super.onResume()
         map.onResume()
@@ -150,9 +169,7 @@ class NotificationMapActivity : AppCompatActivity(), LocationService.LocationUpd
             mapRenderingService.addMarker(mapRenderingService.currentLocation.geoPoint, typeMarker = 'A')
             if(disponible){
                 MundoController.usuario.latitud=mapRenderingService.currentLocation.geoPoint.latitude
-                Log.i("Daniel2", MundoController.usuario.latitud.toString()+" "+ mapRenderingService.currentLocation.geoPoint.latitude.toString())
                 MundoController.usuario.longitud=mapRenderingService.currentLocation.geoPoint.longitude
-                Log.i("Daniel2", MundoController.usuario.longitud.toString()+" "+ mapRenderingService.currentLocation.geoPoint.longitude.toString())
             }
         }
     }

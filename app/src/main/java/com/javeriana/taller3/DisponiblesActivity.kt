@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.CursorAdapter
 import com.javeriana.taller3.adapters.DisponiblesAdapter
 import com.javeriana.taller3.controller.MundoController
+import com.javeriana.taller3.controller.MundoController.Companion.autenticationService
 import com.javeriana.taller3.controller.MundoController.Companion.databaseRealtimeService
 import com.javeriana.taller3.databinding.ActivityDisponiblesBinding
 import com.javeriana.taller3.services.DatabaseRealtimeService
@@ -41,4 +42,8 @@ class DisponiblesActivity : AppCompatActivity(){
         adapter.changeCursor(cursor)
     }
 
+    override fun onDestroy() {
+        databaseRealtimeService.deleteDisponible(autenticationService.auth.currentUser)
+        super.onDestroy()
+    }
 }

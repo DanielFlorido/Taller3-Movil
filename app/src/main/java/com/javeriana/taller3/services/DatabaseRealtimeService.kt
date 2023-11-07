@@ -19,9 +19,11 @@ class DatabaseRealtimeService {
     private lateinit var myRef: DatabaseReference
     private val USERS="users/"
     private val DISPONIBLES= "disponibles/"
+    private val COORDENADAS= "coordenadas/"
     var listUsers: MutableList<Usuario> = mutableListOf()
     private var notificationsListener: ChildEventListener? = null
     private lateinit var listListener: ValueEventListener
+    private var  mapchildListener: ChildEventListener?=null
     fun saveUser(usuario:Usuario, currentUser: FirebaseUser?){
         myRef=database.getReference(USERS+currentUser!!.uid)
         myRef.setValue(usuario)
@@ -34,12 +36,15 @@ class DatabaseRealtimeService {
         myRef=database.getReference(DISPONIBLES+currentUser!!.uid)
         myRef.removeValue()
     }
-    fun notificationDispoible(f:()-> Unit){
+    fun notificationDispoible(f:(user:Usuario)-> Unit){
         Log.i("Daniel", toString())
         if (notificationsListener==null){
             notificationsListener= object:ChildEventListener{
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    f()
+                    val user= snapshot.getValue(Usuario::class.java)
+                    if (user != null) {
+                        f(user)
+                    }
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -86,6 +91,33 @@ class DatabaseRealtimeService {
         myRef=database.getReference(DISPONIBLES)
         myRef.addValueEventListener(listListener)
     }
+    fun seguirDisponible(f:()->Unit, key: String){
+        if(mapchildListener==null){
+            mapchildListener = object : ChildEventListener{
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    //hacerlo :D
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    f()
+                }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    //hacerlo :D
+                }
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    //hacerlo :D
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    //hacerlo :D
+                }
+            }
+        }
+        myRef= database.getReference(COORDENADAS).child(key)
+        mapchildListener?.let { myRef.addChildEventListener(mapchildListener!!) }
+    }
     fun endSubscription(){
         Log.i("Daniel", "Terminando subscripcion")
         database.getReference(DISPONIBLES).removeEventListener(listListener)
@@ -107,5 +139,13 @@ class DatabaseRealtimeService {
     }
     fun getUser(key:String, co:OnCompleteListener<DataSnapshot>):Task<DataSnapshot>{
         return database.getReference(DISPONIBLES).child(key).get().addOnCompleteListener(co)
+    }
+    fun saveCoordenadas(usuario:Usuario, currentUser:FirebaseUser? ){
+        myRef=database.getReference(COORDENADAS+currentUser!!.uid)
+        myRef.setValue(usuario)
+    }
+    fun deleteCoordenadas(currentUser: FirebaseUser?){
+        myRef=database.getReference(COORDENADAS+currentUser!!.uid)
+        myRef.removeValue()
     }
 }

@@ -16,6 +16,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.javeriana.taller3.NotificationMapActivity
 import com.javeriana.taller3.R
+import com.javeriana.taller3.controller.MundoController.Companion.autenticationService
 import com.javeriana.taller3.controller.MundoController.Companion.databaseRealtimeService
 import com.javeriana.taller3.controller.MundoController.Companion.usuarioSeguido
 import com.javeriana.taller3.model.Usuario
@@ -40,6 +41,9 @@ class DisponiblesAdapter (context: Context?, c:Cursor?, flags: Int): CursorAdapt
         tvId.text=id.toString()
         tvnombre.text=nombre
         val button=view!!.findViewById<Button>(R.id.followbtn)
+        if(key.equals(autenticationService.auth.currentUser!!.uid)){
+            button.isEnabled=false
+        }
         button.setOnClickListener {
             Log.i("Daniel", "le diste a: $key")
             databaseRealtimeService.getUser(key){
@@ -54,9 +58,7 @@ class DisponiblesAdapter (context: Context?, c:Cursor?, flags: Int): CursorAdapt
                         if(latitud != null && longitud != null && nombre != null){
                             Log.i("BojtaPurNi", "Latitud: $latitud, Longitud: $longitud, Nombre: $nombre")
                             val intent = Intent(context, NotificationMapActivity::class.java)
-                            intent.putExtra("Latitud", latitud)
-                            intent.putExtra("Longitud", longitud)
-                            intent.putExtra("Nombre", nombre)
+                            intent.putExtra("key", key)
                             context?.startActivity(intent)
                         }
                         Toast.makeText(context, "Estas siguiendo a ${usuarioSeguido.nombre}", Toast.LENGTH_SHORT).show()

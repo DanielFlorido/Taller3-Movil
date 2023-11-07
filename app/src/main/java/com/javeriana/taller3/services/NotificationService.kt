@@ -13,8 +13,10 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.javeriana.taller3.MapActivity
+import com.javeriana.taller3.NotificationMapActivity
 import com.javeriana.taller3.R
 import com.javeriana.taller3.controller.MundoController.Companion.databaseRealtimeService
+import com.javeriana.taller3.model.Usuario
 
 class NotificationService : Service() {
 
@@ -25,7 +27,7 @@ class NotificationService : Service() {
         Log.i("NATA", "se esta escuchando notificacion")
         createNotificationChannel()
         databaseRealtimeService.notificationDispoible {
-            var notification = buildNotification("Persona disponible", "Nueva persona disponible", R.drawable.baseline_circle_notifications_24, MapActivity::class.java)
+            var notification = buildNotification("${it.nombre} disponible", "Pulse para seguir a ${it.nombre}", R.drawable.baseline_circle_notifications_24, NotificationMapActivity::class.java, it)
             notify(notification)
             Log.i("NATA", "se envio la notificacion")
         }
@@ -42,14 +44,15 @@ class NotificationService : Service() {
         }
     }
 
-    fun buildNotification(title: String, message: String, icon: Int, target: Class<*>) : Notification {
+    fun buildNotification(title: String, message: String, icon: Int, target: Class<*>, user: Usuario) : Notification {
         val builder =  NotificationCompat.Builder(this, "Test")
         builder.setSmallIcon(icon)
         builder.setContentTitle(title)
         builder.setContentText(message)
-        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        builder.priority = NotificationCompat.PRIORITY_DEFAULT
         val intent = Intent(this, target)
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.putExtra("Latitud", user.key)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         builder.setContentIntent(pendingIntent)
         builder.setAutoCancel(true) //Remueve la notificación cuando se toque

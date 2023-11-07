@@ -181,6 +181,7 @@ class MapActivity : AppCompatActivity(), LocationService.LocationUpdateListener 
             if(disponible){
                 usuario.latitud=mapRenderingService.currentLocation.geoPoint.latitude
                 usuario.longitud=mapRenderingService.currentLocation.geoPoint.longitude
+                databaseRealtimeService.saveCoordenadas(usuario, autenticationService.auth.currentUser)
             }
         }
     }
@@ -225,12 +226,14 @@ class MapActivity : AppCompatActivity(), LocationService.LocationUpdateListener 
                 usuario.latitud=mapRenderingService.currentLocation.geoPoint.latitude
                 usuario.longitud=mapRenderingService.currentLocation.geoPoint.longitude
                 databaseRealtimeService.saveDisponible(usuario, autenticationService.auth.currentUser)
+                databaseRealtimeService.saveCoordenadas(usuario, autenticationService.auth.currentUser)
               //  notificationService.notify("Nueva persona disponible", "Alguien esta disponible")
             }else{
                 Toast.makeText(baseContext,"Ya no estas disponible",Toast.LENGTH_SHORT).show()
                 disponible=false
                 usuario.latitud=0.0
                 usuario.longitud=0.0
+                databaseRealtimeService.deleteCoordenadas(autenticationService.auth.currentUser)
                 databaseRealtimeService.deleteDisponible(autenticationService.auth.currentUser)
             }
         }
@@ -254,4 +257,8 @@ class MapActivity : AppCompatActivity(), LocationService.LocationUpdateListener 
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        databaseRealtimeService.deleteDisponible(autenticationService.auth.currentUser)
+        super.onDestroy()
+    }
 }
