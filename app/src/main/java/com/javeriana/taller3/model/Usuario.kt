@@ -14,5 +14,7 @@ class Usuario(
         urlImage: String,
         key: String
     ) : this(email, password, nombre, apellido, numeroId, 0.0, 0.0, urlImage,key)
-
+    constructor(latitud: Double,
+                longitud: Double
+    ): this(null,null,null,null,null, latitud, longitud,null,null)
 }
